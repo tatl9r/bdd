@@ -4,12 +4,12 @@ import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.netology.data.DataHelper;
 import ru.netology.page.DashboardPage;
 import ru.netology.page.LoginPage;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static ru.netology.data.DataHelper.*;
 
 public class InternetBankTest {
     @BeforeEach
@@ -32,9 +32,8 @@ public class InternetBankTest {
 
         int currentBalanceFirstCard = page.getCardBalance(0);
         int currentBalanceSecondCard = page.getCardBalance(1);
-        new DashboardPage()
-                .transferFirstCardBalance()
-                .firstCardReplenishment(cardNumber, "1000");
+                page.transferFirstCardBalance();
+                .cardReplenishment(cardNumber, "1000");
 
         int amount = 1000;
         int expected = currentBalanceFirstCard + amount;
@@ -67,7 +66,7 @@ public class InternetBankTest {
         int currentBalanceSecondCard = page.getCardBalance(1);
         new DashboardPage()
                 .transferSecondCardBalance()
-                .secondCardReplenishment(cardNumber, "5000")
+                .cardReplenishment(cardNumber, "5000")
                 .upDate();
         int amount = 5000;
         int expected = currentBalanceFirstCard - amount;
@@ -100,7 +99,7 @@ public class InternetBankTest {
         int currentBalanceSecondCard = page.getCardBalance(1);
         new DashboardPage()
                 .transferFirstCardBalance()
-                .firstCardReplenishment(cardNumber, "500000")
+                .cardReplenishment(cardNumber, "500000")
                 .upDate();
         int amount = 500000;
         int expected = currentBalanceFirstCard;

@@ -14,25 +14,25 @@ public class DataHelper {
     }
 
     @Value
-    public static class FirstCard {
-        private String firstCardNumber;
+    public static class Card {
+        private String cardNumber;
     }
 
-    @Value
-    public static class SecondCard {
-        private String secondCardNumber;
-    }
+  //  @Value
+  //  public static class SecondCard {
+ //       private String secondCardNumber;
+  //  }
 
     public static AuthInfo getAuthInfo() {
         return new AuthInfo("vasya", "qwerty123");
     }
 
-    public static FirstCard getFirstCardInfo() {
-        return new FirstCard("5559 0000 0000 0001");
+    public static Card getFirstCardInfo(AuthInfo authInfo) {
+        return new Card("5559 0000 0000 0001");
     }
 
-    public static SecondCard getSecondCardInfo() {
-        return new SecondCard("5559 0000 0000 0002");
+    public static Card getSecondCardInfo(AuthInfo authInfo) {
+        return new Card("5559 0000 0000 0002");
     }
 
     @Value
