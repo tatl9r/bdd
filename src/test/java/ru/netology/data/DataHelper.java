@@ -18,10 +18,6 @@ public class DataHelper {
         private String cardNumber;
     }
 
-  //  @Value
-  //  public static class SecondCard {
- //       private String secondCardNumber;
-  //  }
 
     public static AuthInfo getAuthInfo() {
         return new AuthInfo("vasya", "qwerty123");
