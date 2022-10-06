@@ -4,11 +4,9 @@ import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static ru.netology.data.DataHelper.*;
-import ru.netology.page.DashboardPage;
+import ru.netology.data.DataHelper;
 import ru.netology.page.LoginPage;
 
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class InternetBankTest {
@@ -17,30 +15,28 @@ public class InternetBankTest {
         open("http://localhost:9999");
     }
 
-
     @Test
     void replenishmentOfTheFirstCard() {
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999");
-        var authInfo = getAuthInfo();
-        var verificationCode = getVerificationCodeFor(authInfo);
-        var cardNumber = getSecondCardInfo();
-        new LoginPage()
-                .validLogin(authInfo)
-                .validVerify(verificationCode);
-        DashboardPage page = new DashboardPage();
 
-        int currentBalanceFirstCard = page.getCardBalance(0);
-        int currentBalanceSecondCard = page.getCardBalance(1);
-                page.transferFirstCardBalance();
-                .cardReplenishment(cardNumber, "1000");
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        var card = DataHelper.getSecondCardInfo(authInfo);
+        int currentBalanceFirstCard = dashboardPage.getCardBalance(0);
+        int currentBalanceSecondCard = dashboardPage.getCardBalance(1);
+        var transferPage = dashboardPage.transferFirstCardBalance();
+        transferPage.cardReplenishment(DataHelper.getFirstCardInfo(authInfo).getCardNumber(), 1000);
 
         int amount = 1000;
         int expected = currentBalanceFirstCard + amount;
-        int actual = page.getCardBalance(0);
+        int actual = dashboardPage.getCardBalance(0);
         Assertions.assertEquals(expected, actual);
         int expected2 = currentBalanceSecondCard - amount;
-        int actual2 = page.getCardBalance(1);
+        int actual2 = dashboardPage.getCardBalance(1);
         Assertions.assertEquals(expected2, actual2);
     }
 
@@ -48,32 +44,26 @@ public class InternetBankTest {
     @Test
     void replenishmentOfTheSecondCard() {
 
-
-        Configuration.holdBrowserOpen = true;
+       Configuration.holdBrowserOpen = true;
         open("http://localhost:9999");
 
-        var authInfo = getAuthInfo();
-        var verificationCode = getVerificationCodeFor(authInfo);
-        var cardNumber = getFirstCardInfo();
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        var card = DataHelper.getFirstCardInfo(authInfo);
+        int currentBalanceFirstCard = dashboardPage.getCardBalance(0);
+        int currentBalanceSecondCard = dashboardPage.getCardBalance(1);
+        var transferPage = dashboardPage.transferSecondCardBalance();
+        transferPage.cardReplenishment(DataHelper.getSecondCardInfo(authInfo).getCardNumber(), 5000);
 
-
-        new LoginPage()
-                .validLogin(authInfo)
-                .validVerify(verificationCode);
-        DashboardPage page = new DashboardPage();
-
-        int currentBalanceFirstCard = page.getCardBalance(0);
-        int currentBalanceSecondCard = page.getCardBalance(1);
-        new DashboardPage()
-                .transferSecondCardBalance()
-                .cardReplenishment(cardNumber, "5000")
-                .upDate();
         int amount = 5000;
         int expected = currentBalanceFirstCard - amount;
-        int actual = page.getCardBalance(0);
+        int actual = dashboardPage.getCardBalance(0);
         Assertions.assertEquals(expected, actual);
         int expected2 = currentBalanceSecondCard + amount;
-        int actual2 = page.getCardBalance(1);
+        int actual2 = dashboardPage.getCardBalance(1);
         Assertions.assertEquals(expected2, actual2);
     }
 
@@ -81,34 +71,20 @@ public class InternetBankTest {
     @Test
     void replenishmentOverLimit() {
 
-
         Configuration.holdBrowserOpen = true;
         open("http://localhost:9999");
 
-        var authInfo = getAuthInfo();
-        var verificationCode = getVerificationCodeFor(authInfo);
-        var cardNumber = getSecondCardInfo();
+        var loginPage = new LoginPage();
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        var card = DataHelper.getSecondCardInfo(authInfo);
+        var transferPage = dashboardPage.transferFirstCardBalance();
+        transferPage.cardReplenishment(DataHelper.getFirstCardInfo(authInfo).getCardNumber(), 500000);
+        transferPage.errorMessage();
 
-
-        new LoginPage()
-                .validLogin(authInfo)
-                .validVerify(verificationCode);
-        DashboardPage page = new DashboardPage();
-
-        int currentBalanceFirstCard = page.getCardBalance(0);
-        int currentBalanceSecondCard = page.getCardBalance(1);
-        new DashboardPage()
-                .transferFirstCardBalance()
-                .cardReplenishment(cardNumber, "500000")
-                .upDate();
-        int amount = 500000;
-        int expected = currentBalanceFirstCard;
-        int actual = page.getCardBalance(0);
-        Assertions.assertEquals(expected, actual);
-        int expected2 = currentBalanceSecondCard;
-        int actual2 = page.getCardBalance(1);
-        Assertions.assertEquals(expected2, actual2);
     }
 
-
 }
+*/
